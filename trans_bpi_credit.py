@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 #import libraries
@@ -12,7 +12,7 @@ import csv
 from io import StringIO
 
 
-# In[2]:
+# In[ ]:
 
 
 #read file
@@ -23,7 +23,7 @@ contents =transactions_file.read()
 transactions_file.close()
 
 
-# In[3]:
+# In[ ]:
 
 
 #make transformations
@@ -31,7 +31,7 @@ string = contents
 #print(string)
 
 
-# In[4]:
+# In[ ]:
 
 
 #combine dates
@@ -64,7 +64,7 @@ string1 = re.sub(pattern,replacement, string)
 #print(string3)
 
 
-# In[5]:
+# In[ ]:
 
 
 #get rid of PHP
@@ -86,7 +86,7 @@ string2 = re.sub(pattern,replacement, string1)
 #print(string5)
 
 
-# In[6]:
+# In[ ]:
 
 
 #get rid of commas
@@ -97,7 +97,7 @@ string3 = re.sub(pattern,replacement, string2)
 #print(string3)
 
 
-# In[7]:
+# In[ ]:
 
 
 #put year
@@ -108,7 +108,7 @@ string4 = re.sub(pattern,replacement, string3)
 #print(string4)
 
 
-# In[16]:
+# In[ ]:
 
 
 #align amounts
@@ -119,7 +119,7 @@ string5 = re.sub(pattern,replacement, string4)
 #print(string5)
 
 
-# In[17]:
+# In[ ]:
 
 
 #replace tabs with commas
@@ -130,7 +130,7 @@ string6 = re.sub(pattern,replacement,string5)
 #print(string6)
 
 
-# In[19]:
+# In[ ]:
 
 
 # wrap the string data in StringIO function 
@@ -141,7 +141,7 @@ string6 = re.sub(pattern,replacement,string5)
 #df.head()
 
 
-# In[30]:
+# In[ ]:
 
 
 #add headers
@@ -152,7 +152,7 @@ string7 = "date\tdescription\tamount\n" + string5
 #print(string7)
 
 
-# In[31]:
+# In[ ]:
 
 
 #convert to dataframe
@@ -168,13 +168,13 @@ df['date'] = pd.to_datetime(df.date)
 df['date'] = df['date'].dt.strftime('%m/%d/%Y')
 
 
-# In[32]:
+# In[ ]:
 
 
 #df.head()
 
 
-# In[33]:
+# In[ ]:
 
 
 #lower
@@ -185,14 +185,25 @@ df.description = df.description.str.lower()
 # In[ ]:
 
 
-#export to csv
-current_dir = os.getcwd()
-filename_csv_full = current_dir + "/" + filename + ".csv"
-export_csv = df.to_csv (filename_csv_full, index = None, header=True)
+#create deposit and withdraw columns
+df['withdraw'] = df['amount'].apply(lambda x: x if (x > 0) else 0)
+df['deposit'] = df['amount'].apply(lambda x: -x if (x < 0) else 0)
+#drop amount and balance columns
+df.drop(['amount'], axis = 1, inplace = True)
 
 
 # In[ ]:
 
 
+df.head()
 
+
+# In[ ]:
+
+
+#export to csv
+#current_dir = os.getcwd()
+#filename_csv_full = current_dir + "/" + filename + ".csv"
+filename_csv_full = filename + ".csv"
+export_csv = df.to_csv (filename_csv_full, index = None, header=True)
 
