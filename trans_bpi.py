@@ -16,10 +16,11 @@ from io import StringIO
 
 
 #read file
-currentDirectory = os.getcwd()
-filename = input("Enter the file name : ")
-full_filename = currentDirectory + "/" + filename + ".txt"
-transactions_file=open(full_filename, "r")
+filename = Path(input("Enter the file name : "))
+#currentDirectory = os.getcwd()
+#filename = input("Enter the file name : ")
+#full_filename = currentDirectory + "/" + filename + ".txt"
+transactions_file=open(filename, "r")
 contents =transactions_file.read()
 transactions_file.close()
 
@@ -137,8 +138,8 @@ df.Description = df.Description.str.lower()
 
 
 #create deposit and withdraw columns
-df['Deposit'] = df['Amount'].apply(lambda x: x if (x > 0) else 0)
 df['Withdraw'] = df['Amount'].apply(lambda x: -x if (x < 0) else 0)
+df['Deposit'] = df['Amount'].apply(lambda x: x if (x > 0) else 0)
 
 
 # In[ ]:
@@ -154,6 +155,6 @@ df.drop(['Amount','Balance'], axis = 1, inplace = True)
 #export to csv
 #current_dir = os.getcwd()
 #filename_csv_full = current_dir + "/" + filename + ".csv"
-filename_csv_full = filename + ".csv"
+filename_csv_full = 'for import ' + filename.name + ".csv"
 export_csv = df.to_csv (filename_csv_full, index = None, header=True)
 
