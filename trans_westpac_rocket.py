@@ -40,7 +40,7 @@ df = df.loc[-df.date.isnull()]
 
 
 #convert to default date format
-df.date.loc[:] = df.date.dt.strftime('%m/%d/%Y')
+df.date = df.date.dt.strftime('%m/%d/%Y')
 
 
 # In[ ]:

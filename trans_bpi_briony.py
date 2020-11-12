@@ -24,16 +24,18 @@ filename = Path(input("Enter the file name : "))
 
 
 #load csv to dataframe
-df = pd.read_csv(filename)
+col_list = ['Date', 'Description', 'Debit', 'Credit', 'Balance']
+df = pd.read_csv(filename, names = col_list)
 
 
 # In[ ]:
 
 
 #lowercase
-col_list = ['Date', 'Description', 'Debit', 'Credit', 'Balance']
-for cols in col_list:
-    df[cols] = df[cols].str.lower()
+#for cols in col_list:
+#    df[cols] = df[cols].str.lower()
+
+df.Description = df.Description.str.lower()
 
 
 # In[ ]:

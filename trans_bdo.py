@@ -10,23 +10,24 @@ import pandas as pd
 import re
 import csv
 from io import StringIO
+from pathlib import Path
 
 
 # In[ ]:
 
 
 #read file
-filename = input("Enter the file name : ")
-full_filename = filename + ".csv"
+filename = Path(input("Enter the file name : "))
 
 
 # In[ ]:
 
 
+#read the csv file
 header_list = ['Posting Date','Description','Blank1','Branch','Debit Amount',
           'Blank2','Credit Amount','Blank3','Running Balance','Blank4',
           'Currency','Check Number']
-df = pd.read_csv(full_filename, names = header_list)
+df = pd.read_csv(filename, names = header_list)
 #df.head(30)
 
 
@@ -70,8 +71,6 @@ df = df.fillna(value = 0)
 
 
 #convert date to datetime
-#df['Posting Date'] = pd.to_datetime(df['Posting Date'], format = '%m/%d/%Y')
-#df['Posting Date'] = pd.to_datetime(df["Posting Date"].dt.strftime('%m/%d/%Y'))
 df['Posting Date'] = pd.to_datetime(df['Posting Date'])
 df['Posting Date'] = df['Posting Date'].dt.strftime('%m/%d/%Y')
 
@@ -88,7 +87,7 @@ df['Description'] = df['Description'] + ' ' + df['Branch']
 
 #strip unneeded spaces
 df['Description'] = df['Description'].str.strip()
-df['Description'] = df['Description'].str.replace("  "," ")
+df['Description'] = df['Description'].str.replace(" +"," ")
 
 
 # In[ ]:
@@ -109,6 +108,6 @@ df = df.drop(columns = 'Branch')
 
 
 #export to csv
-filename_csv_full = filename + ".csv"
-export_csv = df.to_csv (filename_csv_full, index = None, header=True)
+filename_csv_full = 'for import ' + filename.stem + ".csv"
+df.to_csv (filename_csv_full, index = None, header=True)
 

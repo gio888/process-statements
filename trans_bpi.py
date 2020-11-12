@@ -10,6 +10,7 @@ import pandas as pd
 import re
 import csv
 from io import StringIO
+from pathlib import Path
 
 
 # In[ ]:
@@ -17,9 +18,6 @@ from io import StringIO
 
 #read file
 filename = Path(input("Enter the file name : "))
-#currentDirectory = os.getcwd()
-#filename = input("Enter the file name : ")
-#full_filename = currentDirectory + "/" + filename + ".txt"
 transactions_file=open(filename, "r")
 contents =transactions_file.read()
 transactions_file.close()
@@ -30,7 +28,6 @@ transactions_file.close()
 
 #make transformations
 string = contents
-#print(string)
 
 
 # In[ ]:
@@ -42,8 +39,6 @@ pattern = r"\n"
 replacement = " "
 string01 = re.sub(pattern,replacement, string)
 
-#print(string01)
-
 
 # In[ ]:
 
@@ -52,8 +47,6 @@ string01 = re.sub(pattern,replacement, string)
 pattern = r"( Jan| Feb| Mar| Apr| May| Jun| Jul| Aug| Sep| Oct| Nov| Dec)"
 replacement = r"\n\1"
 string02 = re.sub(pattern,replacement, string01)
-
-#print(string02)
 
 
 # In[ ]:
@@ -64,8 +57,6 @@ pattern = r"\n "
 replacement = r"\n"
 string03 = re.sub(pattern,replacement, string02)
 
-#print(string03)
-
 
 # In[ ]:
 
@@ -74,8 +65,6 @@ string03 = re.sub(pattern,replacement, string02)
 pattern = ","
 replacement = ""
 string04 = re.sub(pattern,replacement, string03)
-
-#print(string04)
 
 
 # In[ ]:
@@ -86,8 +75,6 @@ pattern = r"(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)( \d{2})( )"
 replacement = r"\1\2,"
 string05 = re.sub(pattern,replacement, string04)
 
-#print(string05)
-
 
 # In[ ]:
 
@@ -97,17 +84,12 @@ pattern = " PHP "
 replacement = ","
 string06 = re.sub(pattern,replacement, string05)
 
-#print(string06)
-
 
 # In[ ]:
 
 
 #add headers
 string07 = "Date,Description,Amount,Balance\n" + string06
-
-
-#print(string07)
 
 
 # In[ ]:
@@ -153,8 +135,6 @@ df.drop(['Amount','Balance'], axis = 1, inplace = True)
 
 
 #export to csv
-#current_dir = os.getcwd()
-#filename_csv_full = current_dir + "/" + filename + ".csv"
-filename_csv_full = 'for import ' + filename.name + ".csv"
-export_csv = df.to_csv (filename_csv_full, index = None, header=True)
+filename_csv_full = 'for import ' + filename.stem + ".csv"
+df.to_csv (filename_csv_full, index = None, header=True)
 

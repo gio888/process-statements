@@ -10,15 +10,15 @@ import pandas as pd
 import re
 import csv
 from io import StringIO
+from pathlib import Path
 
 
 # In[ ]:
 
 
 #read file
-filename = input("Enter the file name : ")
-full_filename = filename + ".txt"
-transactions_file=open(full_filename, "r")
+filename = Path(input("Enter the file name : "))
+transactions_file=open(filename, "r")
 contents =transactions_file.read()
 transactions_file.close()
 
@@ -28,7 +28,6 @@ transactions_file.close()
 
 #make transformations
 string = contents
-#print(string)
 
 
 # In[ ]:
@@ -39,30 +38,6 @@ pattern = r"(\w{3})(\n)"
 replacement = r"\1 "
 string1 = re.sub(pattern,replacement, string)
 
-#print(string1)
-
-
-# In[ ]:
-
-
-#combine description
-#pattern = r"(\d{2})(\n)(\d{2,4})"
-#replacement = r"\1\t\3"
-#string2 = re.sub(pattern,replacement, string1)
-
-#print(string2)
-
-
-# In[ ]:
-
-
-#combine amount and balance
-#pattern = r"(\.\d{2})(\n)(PHP )"
-#replacement = r"\1\t"
-#string3 = re.sub(pattern,replacement, string2)
-
-#print(string3)
-
 
 # In[ ]:
 
@@ -71,19 +46,6 @@ string1 = re.sub(pattern,replacement, string)
 pattern = "PHP "
 replacement = r"\t"
 string2 = re.sub(pattern,replacement, string1)
-
-#print(string2)
-
-
-# In[ ]:
-
-
-#separate transaction number
-#pattern = r"(\t)(\d{4})( )"
-#replacement = r"\1\2\t"
-#string5 = re.sub(pattern,replacement, string4)
-
-#print(string5)
 
 
 # In[ ]:
@@ -94,8 +56,6 @@ pattern = ","
 replacement = ""
 string3 = re.sub(pattern,replacement, string2)
 
-#print(string3)
-
 
 # In[ ]:
 
@@ -104,8 +64,6 @@ string3 = re.sub(pattern,replacement, string2)
 pattern = r"(\w{3} \d{2})(\n)"
 replacement = r"\1, 2020\t"
 string4 = re.sub(pattern,replacement, string3)
-
-#print(string4)
 
 
 # In[ ]:
@@ -116,8 +74,6 @@ pattern = r"(\n)(\t\d+\.\d{2})"
 replacement = r"\2"
 string5 = re.sub(pattern,replacement, string4)
 
-#print(string5)
-
 
 # In[ ]:
 
@@ -126,19 +82,6 @@ string5 = re.sub(pattern,replacement, string4)
 pattern = r"\t"
 replacement = r","
 string6 = re.sub(pattern,replacement,string5)
-
-#print(string6)
-
-
-# In[ ]:
-
-
-# wrap the string data in StringIO function 
-#StringData = StringIO(string6) 
-  
-# read the data using the Pandas read_csv() function 
-#df = pd.read_csv(StringData, names = ['date','description','amount'])
-#df.head()
 
 
 # In[ ]:
@@ -171,15 +114,8 @@ df['date'] = df['date'].dt.strftime('%m/%d/%Y')
 # In[ ]:
 
 
-#df.head()
-
-
-# In[ ]:
-
-
 #lower
 df.description = df.description.str.lower()
-#df.head()
 
 
 # In[ ]:
@@ -202,8 +138,6 @@ df.head()
 
 
 #export to csv
-#current_dir = os.getcwd()
-#filename_csv_full = current_dir + "/" + filename + ".csv"
-filename_csv_full = filename + ".csv"
-export_csv = df.to_csv (filename_csv_full, index = None, header=True)
+filename_csv_full = 'for import ' + filename.stem + ".csv"
+df.to_csv (filename_csv_full, index = None, header=True)
 

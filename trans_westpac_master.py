@@ -24,15 +24,15 @@ filename = Path(input("Enter the file name : "))
 
 
 #load csv to dataframe
-col_list = ['date', 'desc', 'debit', 'credit']
-df = pd.read_csv(filename, usecols = [0,1,2,3], names = col_list)
+col_list = ['date_raw', 'desc_raw', 'amount_raw']
+df = pd.read_csv(filename, names = col_list)
 
 
 # In[ ]:
 
 
 #get rid of unneeded rows
-df.date = pd.to_datetime(df.date, errors='coerce', dayfirst=True)
+df.date_raw = pd.to_datetime(df.date_raw, errors='coerce', dayfirst=True)
 #df = df.loc[-df.date.isnull()]
 
 
@@ -40,28 +40,37 @@ df.date = pd.to_datetime(df.date, errors='coerce', dayfirst=True)
 
 
 #convert to default date format
-df.date.loc[:] = df.date.dt.strftime('%m/%d/%Y')
+df.date_raw = df.date_raw.dt.strftime('%m/%d/%Y')
 
 
 # In[ ]:
 
 
 #strip unneeded spaces
-df.desc = df.desc.str.strip()
-df.desc = df.desc.str.replace(" +"," ")
+df.desc_raw = df.desc_raw.str.strip()
+df.desc_raw = df.desc_raw.str.replace(" +"," ")
 
 
 # In[ ]:
 
 
 #lower
-df['desc'] = df.desc.str.lower()
+df['desc_raw'] = df.desc_raw.str.lower()
 
 
 # In[ ]:
 
 
+#create credit col from amount and clean it
+df['credit'] = df.amount_raw.loc[df.amount_raw.str.contains(' -')]
 df.credit = df.credit.str.replace(' -','')
+
+
+# In[ ]:
+
+
+#create debit col
+df['debit'] = df.amount_raw.loc[~df.amount_raw.str.contains(' -')]
 
 
 # In[ ]:
@@ -70,6 +79,20 @@ df.credit = df.credit.str.replace(' -','')
 #get rid of nans
 df.debit = df.debit.fillna(0)
 df.credit = df.credit.fillna(0)
+
+
+# In[ ]:
+
+
+#drop amount_raw
+df = df.drop(columns = 'amount_raw')
+
+
+# In[ ]:
+
+
+#rename columns
+df.columns = ['date','desc','credit','debit']
 
 
 # In[ ]:
