@@ -31,7 +31,7 @@ df = pd.read_csv(filename, names = ['datetime','desc','id','withdraw','deposit']
 
 
 #convert id to integer then to a string
-df['id'] = df['id'].astype('int64')
+#df['id'] = df['id'].astype('int64')
 df['id'] = df['id'].astype('str')
 
 
